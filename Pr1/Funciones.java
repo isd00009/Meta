@@ -2,7 +2,7 @@ import java.util.Vector;
 
 public class Funciones {
 
-    double Griewank(Vector<Double> x) {
+    public double Griewank(Vector<Double> x) {
         double sum = 0;
         double prod = 1;
         int d = x.size();
@@ -14,7 +14,7 @@ public class Funciones {
         return sum - prod + 1;
     }
 
-    double Ackley(Vector<Double> x) {
+    public double Ackley(Vector<Double> x) {
 
         int d = x.size();
 
@@ -37,7 +37,7 @@ public class Funciones {
 
     }
 
-    double Rastrigin(Vector<Double> x) {
+    public double Rastrigin(Vector<Double> x) {
 
         double d = x.size();
         double sum = 0;
@@ -50,7 +50,7 @@ public class Funciones {
 
     }
 
-    double Schwef(Vector<Double> x) {
+    public double Schwef(Vector<Double> x) {
 
         double d = x.size();
 
@@ -64,7 +64,7 @@ public class Funciones {
 
     }
 
-    double Perm0db(Vector<Double> x) {
+    public double Perm0db(Vector<Double> x) {
 
         double d = x.size();
         int b = 10;
@@ -82,7 +82,7 @@ public class Funciones {
         return outer;
     }
 
-    double Rothyp(Vector<Double> x) {
+    public double Rothyp(Vector<Double> x) {
 
         double d = x.size();
         double outer = 0;
@@ -99,7 +99,7 @@ public class Funciones {
         return outer;
     }
 
-    double Rosen(Vector<Double> x) {
+    public double Rosen(Vector<Double> x) {
 
         double d = x.size();
         double sum = 0;
@@ -114,7 +114,7 @@ public class Funciones {
         return sum;
     }
 
-    double Trid(Vector<Double> x) {
+    public double Trid(Vector<Double> x) {
     
         double d = x.size(); 
         double sum2 =0;
@@ -130,7 +130,7 @@ public class Funciones {
         return sum1 - sum2;
     }
 
-    double DixonPr(Vector<Double> x) {
+    public double DixonPr(Vector<Double> x) {
     
         double d = x.size(); 
         double x1 = x.get(0);
