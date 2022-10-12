@@ -2,7 +2,7 @@ import java.util.Vector;
 
 public class Funciones {
 
-    public double Griewank(Vector<Double> x) {
+    public static double Griewank(Vector<Double> x) {
         double sum = 0;
         double prod = 1;
         int d = x.size();
@@ -14,7 +14,7 @@ public class Funciones {
         return sum - prod + 1;
     }
 
-    public double Ackley(Vector<Double> x) {
+    public static double Ackley(Vector<Double> x) {
 
         int d = x.size();
 
@@ -37,7 +37,7 @@ public class Funciones {
 
     }
 
-    public double Rastrigin(Vector<Double> x) {
+    public static double Rastrigin(Vector<Double> x) {
 
         double d = x.size();
         double sum = 0;
@@ -50,7 +50,7 @@ public class Funciones {
 
     }
 
-    public double Schwef(Vector<Double> x) {
+    public static double Schwefel(Vector<Double> x) {
 
         double d = x.size();
 
@@ -64,7 +64,7 @@ public class Funciones {
 
     }
 
-    public double Perm0db(Vector<Double> x) {
+    public static double Perm0db(Vector<Double> x) {
 
         double d = x.size();
         int b = 10;
@@ -82,7 +82,7 @@ public class Funciones {
         return outer;
     }
 
-    public double Rothyp(Vector<Double> x) {
+    public static double Rothyp(Vector<Double> x) {
 
         double d = x.size();
         double outer = 0;
@@ -99,7 +99,7 @@ public class Funciones {
         return outer;
     }
 
-    public double Rosen(Vector<Double> x) {
+    public static double Rosenbrock(Vector<Double> x) {
 
         double d = x.size();
         double sum = 0;
@@ -114,7 +114,17 @@ public class Funciones {
         return sum;
     }
 
-    public double Trid(Vector<Double> x) {
+    public static double Michalewicz(Vector<Double> x) {
+        double d = x.size();
+        double m = 10;
+        double suma = 0;
+        for (int i = 0; i < d; i++) {
+            suma += Math.sin(x.get(i))*Math.pow(Math.sin((i+1)*Math.pow(x.get(i),2)/Math.PI),2*m);
+        }
+        return -suma;
+    }
+
+    public static double Trid(Vector<Double> x) {
     
         double d = x.size(); 
         double sum2 =0;
@@ -130,7 +140,7 @@ public class Funciones {
         return sum1 - sum2;
     }
 
-    public double DixonPr(Vector<Double> x) {
+    public static double DixonPr(Vector<Double> x) {
     
         double d = x.size(); 
         double x1 = x.get(0);
@@ -146,6 +156,33 @@ public class Funciones {
         }
 
         return term1 + sum;
+    }
+
+    static double CalcularCoste(Vector<Double> x, int selector){
+        switch(selector){
+            case 1:
+                return Griewank(x);
+            case 2:
+                return Ackley(x);
+            case 3:
+                return Rastrigin(x);
+            case 4:
+                return Schwefel(x);
+            case 5:
+                return Perm0db(x);
+            case 6:
+                return Rothyp(x);
+            case 7:
+                return Rosenbrock(x);
+            case 8:
+                return Michalewicz(x);
+            case 9: 
+                return Trid(x);
+            case 10: 
+                return DixonPr(x);
+            default:
+                return -1;
+        }
     }
 
 }

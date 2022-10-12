@@ -1,0 +1,5 @@
+function=Michalewicz 0 6.2831
+dni=45925009 59250094 92500945 25009459 50094592
+evaluaciones=1000
+d=10
+n=8
