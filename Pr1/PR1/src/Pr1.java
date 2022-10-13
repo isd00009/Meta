@@ -10,7 +10,7 @@ public class Pr1 {
         double rmin, rmax;
         long semilla, evaluaciones;
 
-        LeerArchivo leer = new LeerArchivo("Trid.txt");
+        LeerArchivo leer = new LeerArchivo("Rastringin.txt");
         tam = leer.getTam();
         nombreAlg = leer.getNombreAlg();
         rmin = leer.getRmin();

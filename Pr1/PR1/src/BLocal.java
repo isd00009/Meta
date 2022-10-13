@@ -3,6 +3,11 @@ import java.util.Random;
 
 public class BLocal {
 
+    private final static int nvecinos = 3;
+    private final static double probabilidad = 0.3;
+    private final static double intervaloBajo = 1 - 0.1;
+    private final static double intervaloAlto = 1 + 0.1;
+
     public static double Blocal3(int tam, long evaluaciones, Vector<Double> SolActual, double rmin,
             double rmax, int selector) {
 
@@ -18,19 +23,19 @@ public class BLocal {
         Vector<Double> mejorVecino = new Vector<>(SolActual);
         double mejorCosteVecino;
         double mejorCoste = Funciones.CalcularCoste(SolActual, selector);
-        int iter = 0;
+        int iteraciones = 0;
         boolean mejora = true;
 
-        while (mejora && iter < evaluaciones) {
+        while (mejora && iteraciones < evaluaciones) {
             mejora = false;
             mejorCosteVecino = Integer.MAX_VALUE;
-            for (int j = 1; j <= 3; j++) {
-                for (int k = 0; k < tam; k++) { // Para k = 1 hasta d
-                    float uniforme = rand.nextFloat(); // 1aleatorio[0,1]
-                    if (uniforme <= 0.3) { // Si aleatorio < 0.3
+            for (int j = 1; j <= nvecinos; j++) {
+                for (int k = 0; k < tam; k++) {
+                    float uniforme = rand.nextFloat();
+                    if (uniforme <= probabilidad) {
                         double inf, sup;
-                        inf = SolActual.get(k) * 0.9;
-                        sup = SolActual.get(k) * 1.1;
+                        inf = SolActual.get(k) * intervaloBajo;
+                        sup = SolActual.get(k) * intervaloAlto;
                         if (inf < rmin) {
                             inf = rmin;
                         }
@@ -52,12 +57,17 @@ public class BLocal {
                 SolActual = mejorVecino;
                 mejorCoste = mejorCosteVecino;
                 mejora = true;
-                iter++;
+                iteraciones++;
             }
         }
 
-        System.out.println("***********Iteraciones:" + iter);
+        System.out.println("Iteraciones:" + iteraciones);
         return mejorCoste;
+    }
+
+    public static double BlocalK(int tam, long evaluaciones, Vector<Double> SolActual, double rmin, double rmax, int selector) {
+
+        return 0.0;
     }
 
 }
