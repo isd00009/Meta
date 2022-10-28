@@ -12,7 +12,7 @@ public class Pr1 {
         long semilla, evaluaciones;
         double aux = 0;
 
-        LeerArchivo leer = new LeerArchivo("Rosenbrock.txt");
+        LeerArchivo leer = new LeerArchivo("DixonPr.txt");
         tam = leer.getTam();
         nombreAlg = leer.getNombreAlg();
         rmin = leer.getRmin();
