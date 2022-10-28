@@ -7,10 +7,12 @@ public class Pr1 {
         int tam;
         String nombreAlg;
         int nAlg;
+        int tTabu = 10;
         double rmin, rmax;
         long semilla, evaluaciones;
+        double aux = 0;
 
-        LeerArchivo leer = new LeerArchivo("Rastringin.txt");
+        LeerArchivo leer = new LeerArchivo("Rosenbrock.txt");
         tam = leer.getTam();
         nombreAlg = leer.getNombreAlg();
         rmin = leer.getRmin();
@@ -27,8 +29,11 @@ public class Pr1 {
 
         solActual = new Vector<Double>(tam);
 
-        for(int i = 0; i < 3; i++){
-            double aux = BLocal.Blocal3(tam, evaluaciones, solActual,rmin,rmax,nAlg);
+        //for(int i = 0; i < 3; i++){
+            long startTime = System.currentTimeMillis();
+            aux = BLocal.Blocal3(tam, evaluaciones, solActual, rmin, rmax, nAlg);
+            //aux = MultiArranque.busquedaTabu(evaluaciones,tam, solActual,rmin,rmax,tTabu,nAlg);
+            long endTime = System.currentTimeMillis();
 
             //System.out.println("Vector solucion: ");
             //for(int j = 0; j < tam; i++){
@@ -36,8 +41,9 @@ public class Pr1 {
             // }
 
             System.out.println("Coste BLocal3: " + aux);
+            System.out.println("Tiempo de ejecución: " + (endTime - startTime) + " ms");
 
             
-        }
+       // }
     }
 }

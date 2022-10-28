@@ -9,7 +9,7 @@ public class MultiArranque {
     private final static double intervaloBajo = 1 - 0.1;
     private final static double intervaloAlto = 1 + 0.1;
 
-    public double busquedaTabu(int iteraciones, int tam, Vector<Double> solActual, double rmin,
+    public static double busquedaTabu(long iteraciones, int tam, Vector<Double> solActual, double rmin,
             double rmax, int tenenciaTabu, int selector) {
 
         Random rand = new Random();
@@ -252,7 +252,7 @@ public class MultiArranque {
 
     }
 
-    public void masVisitados(long[][] memFrec, Vector<Double> nuevaSol, double rmin, double rmax) {
+    public static void masVisitados(long[][] memFrec, Vector<Double> nuevaSol, double rmin, double rmax) {
         memFrec = new long[10][10];
         int tam = nuevaSol.size();
         double mayor;
@@ -282,7 +282,7 @@ public class MultiArranque {
         }
     }
 
-    public void menosVisitados(long[][] memFrec, Vector<Double> nuevaSol, double rmin,
+    public static void menosVisitados(long[][] memFrec, Vector<Double> nuevaSol, double rmin,
             double rmax) {
         memFrec = new long[10][10];
         int tam = nuevaSol.size();

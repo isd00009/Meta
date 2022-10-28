@@ -74,7 +74,10 @@ public class Funciones {
             double inner = 0;
             for (int j = 0; j < d; j++) {
                 double xj = x.get(j);
-                inner += (j + 1 + b) * (Math.pow(xj, i + 1) - (1 / Math.pow(j+1, i+1)));
+                double aux = j+b+1;
+                double aux1 = Math.pow(xj,i+1);
+                double aux2 = (1/Math.pow(j+1,i+1));
+                inner += aux*(aux1 - aux2);
             }
             outer += inner * inner;
         }
@@ -93,7 +96,7 @@ public class Funciones {
                 double xj = x.get(j);
                 inner += xj * xj;
             }
-            outer += outer * inner;
+            outer += inner;
         }
 
         return outer;
