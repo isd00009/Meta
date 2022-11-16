@@ -146,7 +146,6 @@ public class EvM {
 
             if (!aux) {
                 int pos1, pos2, pos3, pos4;
-                int c = 0;
                 pos1 = (int) (Math.random() * tamPoblacion);
                 pos2 = (int) (Math.random() * tamPoblacion);
                 pos3 = (int) (Math.random() * tamPoblacion);
