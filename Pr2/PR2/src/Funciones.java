@@ -204,4 +204,25 @@ public class Funciones {
     static void mutacion(ArrayList<Double> al, int pos, double valor) {
         al.set(pos, valor);
     }
+
+    static void cruceBLX(ArrayList<Double> v, ArrayList<Double> w, ArrayList<Double> h, int tam,
+            double alpha,double rmin, double rmax) {
+                h = new ArrayList<Double>(tam);
+                double cMax,cMin,I;
+                for (int i = 0; i < tam; i++) {
+                    cMax = Math.max(v.get(i), w.get(i));
+                    cMin = Math.min(v.get(i), w.get(i));
+                    I = cMax - cMin;
+                    double r1 = cMin - alpha * I;
+                    double r2 = cMax + alpha * I;
+                    if(r1 < rmin){
+                        r1 = rmin;
+                    }
+                    if(r2 > rmax){
+                        r2 = rmax;
+                    }
+                    h.add(i, r1 + (r2 - r1) * Math.random());
+                }
+    }
 }
+

@@ -3,7 +3,8 @@ import java.util.ArrayList;
 public class EvBLX {
 
     public double EvaBLX(int tamPoblacion, int tam, int evaluaciones, ArrayList<Double> sol,
-            double rmin, double rmax, double probMutacion, double probCruce, int selector) {
+            double rmin, double rmax, double probMutacion, double probCruce, int selector,
+            double alpha) {
 
         ArrayList<Cromosoma> cr = new ArrayList<Cromosoma>(tamPoblacion);
         for (int i = 0; i < tamPoblacion; i++) {
@@ -19,7 +20,7 @@ public class EvBLX {
         ArrayList<Double> mejorCromosomaGlobal = new ArrayList<Double>(tam);
 
         int peor, peorCosteHijo;
-        int mejorCromosomaHijo;
+        int mejorCromosomaHijo = 0;
 
         double mejorCoste = Double.MAX_VALUE, mejorCosteHijo = Double.MAX_VALUE, mejorCosteGlobal;
 
@@ -77,13 +78,15 @@ public class EvBLX {
                 if (costesH.get(coste1) < costesH.get(coste2)) {
                     mejorCoste1 = costesH.get(coste1);
                     mejorCromosoma1 = nuevaG.get(coste1);
+                    posMAnt = coste1;
                 } else {
                     mejorCoste1 = costesH.get(coste2);
                     mejorCromosoma1 = nuevaG.get(coste2);
+                    posMAnt = coste2;
                 }
 
                 while (posMAnt == (coste3 = (int) (Math.random() * tamPoblacion)));
-                while (posMant == (coste4 = (int) (Math.random() * tamPoblacion)));
+                while (posMAnt == (coste4 = (int) (Math.random() * tamPoblacion)));
 
                 if (costesH.get(coste3) < costesH.get(coste4)) {
                     mejorCoste2 = costesH.get(coste3);
@@ -95,7 +98,8 @@ public class EvBLX {
 
                 x = Math.random();
                 if (x < probCruce) {
-                    Funciones.cruceMedia(mejorCromosoma1, mejorCromosoma2, hijos, tam);
+                    Funciones.cruceBLX(mejorCromosoma1, mejorCromosoma2, hijos, tam, alpha, rmin,
+                            rmax);
                     nuevaG2.add(i, hijos);
                     marcados.set(i, true);
                 } else {
@@ -144,8 +148,10 @@ public class EvBLX {
 
             if (!aux) {
                 int pos1, pos2, pos3, pos4;
-                int c = 0;
                 pos1 = (int) (Math.random() * tamPoblacion);
+                pos2 = (int) (Math.random() * tamPoblacion);
+                pos3 = (int) (Math.random() * tamPoblacion);
+                pos4 = (int) (Math.random() * tamPoblacion);
 
                 while (pos1 == (pos2 = (int) (Math.random() * tamPoblacion)));
                 while ((pos1 == pos2) && (pos1 == (pos3 = (int) (Math.random() * tamPoblacion)))

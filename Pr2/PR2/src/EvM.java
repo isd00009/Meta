@@ -19,7 +19,7 @@ public class EvM {
         ArrayList<Double> mejorCromosomaGlobal = new ArrayList<Double>(tam);
 
         int peor, peorCosteHijo;
-        int mejorCromosomaHijo;
+        int mejorCromosomaHijo = 0;
 
         double mejorCoste = Double.MAX_VALUE, mejorCosteHijo = Double.MAX_VALUE, mejorCosteGlobal;
 
@@ -67,7 +67,7 @@ public class EvM {
             ArrayList<Double> mejorCromosoma2 = new ArrayList<Double>(tam);
             ArrayList<Double> hijos = new ArrayList<Double>(tam);
             double x;
-            int posMAnt;
+            int posMAnterior;
 
             for (int i = 0; i < tamPoblacion; i++) {
 
@@ -77,13 +77,15 @@ public class EvM {
                 if (costesH.get(coste1) < costesH.get(coste2)) {
                     mejorCoste1 = costesH.get(coste1);
                     mejorCromosoma1 = nuevaG.get(coste1);
+                    posMAnterior = coste1;
                 } else {
                     mejorCoste1 = costesH.get(coste2);
                     mejorCromosoma1 = nuevaG.get(coste2);
+                    posMAnterior = coste2;
                 }
 
-                while (posMAnt == (coste3 = (int) (Math.random() * tamPoblacion)));
-                while (posMant == (coste4 = (int) (Math.random() * tamPoblacion)));
+                while (posMAnterior == (coste3 = (int) (Math.random() * tamPoblacion)));
+                while (posMAnterior == (coste4 = (int) (Math.random() * tamPoblacion)));
 
                 if (costesH.get(coste3) < costesH.get(coste4)) {
                     mejorCoste2 = costesH.get(coste3);
@@ -146,6 +148,9 @@ public class EvM {
                 int pos1, pos2, pos3, pos4;
                 int c = 0;
                 pos1 = (int) (Math.random() * tamPoblacion);
+                pos2 = (int) (Math.random() * tamPoblacion);
+                pos3 = (int) (Math.random() * tamPoblacion);
+                pos4 = (int) (Math.random() * tamPoblacion);
 
                 while (pos1 == (pos2 = (int) (Math.random() * tamPoblacion)));
                 while ((pos1 == pos2) && (pos1 == (pos3 = (int) (Math.random() * tamPoblacion)))
