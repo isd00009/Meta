@@ -1,6 +1,6 @@
 import java.util.Vector;
 
-public class Aux {
+public class Misc {
 
     public static void mostrarVector(Vector<Double> v) {
         for (long k = 0; k < v.size(); k++) {

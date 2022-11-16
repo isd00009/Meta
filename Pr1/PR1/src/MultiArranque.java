@@ -9,19 +9,19 @@ public class MultiArranque {
     private final static double intervaloBajo = 1 - 0.1;
     private final static double intervaloAlto = 1 + 0.1;
 
-    public static double busquedaTabu(long iteraciones, int tam, Vector<Double> solActual, double rmin,
-            double rmax, int tenenciaTabu, int selector) {
+    public static double busquedaTabu(long iteraciones, int tam, Vector<Double> solActual,
+            double rmin, double rmax, int tenenciaTabu, int selector) {
 
         Random rand = new Random();
         int cont;
         double inf, sup;
 
         for (int i = 0; i < tam; i++) {
-            solActual.add(i, Math.floor(Math.random() * (rmax - rmin + 1) + rmin));
+            solActual.add(i, Math.random() * (rmax - rmin + 1) + rmin);
         }
 
         System.out.println("Vector solucion inicial: ");
-        Aux.mostrarVector(solActual);
+        Misc.mostrarVector(solActual);
 
         double costeActual = Funciones.CalcularCoste(solActual, selector);
         double costeMejorPeor, costeGlobal = costeActual, costeMejorMomento = Integer.MAX_VALUE;
@@ -53,6 +53,7 @@ public class MultiArranque {
 
         Vector<Double> vecino = new Vector<Double>(tam);
         Vector<Double> mejorVecino = new Vector<Double>();
+        Vector<Double> anterior = new Vector<Double>();
         double mejorCosteVecino = Integer.MAX_VALUE;
 
         int contNoTabu;
@@ -87,12 +88,16 @@ public class MultiArranque {
                             if (sup > rmax) {
                                 sup = rmax;
                             }
-                            vecino.add(k, Math.floor(Math.random() * (sup - inf + 1) + inf));
+                            vecino.add(k, Math.random() * (sup - inf + 1) + inf);
                         } else {
                             if (multiArranque == 2) {
-                                vecino.add(k, Math.floor(Math.random() * (rmax - rmin + 1) + rmin));
+                                vecino.add(k, Math.random() * (rmax - rmin + 1) + rmin);
                             } else {
-                                vecino.add(k, solActual.get(k) * -1);
+                                if (selector == 8) {
+                                    vecino.add(k, Math.pow(solActual.get(k),-1));
+                                } else {
+                                    vecino.add(k, solActual.get(k) * -1);
+                                }
                             }
                         }
                     } else {
@@ -139,35 +144,39 @@ public class MultiArranque {
             }
 
             if (contNoTabu != 0) {
-                double ancho = (rmax - rmin - 1) / 10;
-                for (int i = 0; i < tam; i++) {
-                    int posCol = 0;
-                    for (double j = rmin; j < rmax; j += ancho) {
-                        if (j < 0) {
-                            if (Math.abs(mejorVecino.get(i)) >= Math.abs(j)
-                                    && Math.abs(mejorVecino.get(i)) < Math.abs(j + ancho)) {
-                                memFrec[i][posCol]++;
-                                break;
+                if (anterior != mejorVecino) {
+                    double ancho = (rmax - rmin - 1) / 10;
+                    for (int i = 0; i < tam; i++) {
+                        int posCol = 0;
+                        for (double j = rmin; j < rmax; j += ancho) {
+                            if (j < 0) {
+                                if (Math.abs(mejorVecino.get(i)) >= Math.abs(j)
+                                        && Math.abs(mejorVecino.get(i)) < Math.abs(j + ancho)) {
+                                    memFrec[i][posCol]++;
+                                    break;
+                                }
+                            } else {
+                                if (mejorVecino.get(i) >= j && mejorVecino.get(i) < j + ancho) {
+                                    memFrec[i][posCol]++;
+                                    break;
+                                }
                             }
-                        } else {
-                            if (mejorVecino.get(i) >= j && mejorVecino.get(i) < j + ancho) {
-                                memFrec[i][posCol]++;
-                                break;
-                            }
+                            posCol++;
                         }
-                        posCol++;
+                    }
+
+                    listaTabu.add(mejorVecino);
+                    if (listaTabu.size() > tenenciaTabu) {
+                        listaTabu.remove(0);
+                    }
+
+                    listaTabuMov.add(cambiosMejorVecino);
+                    if (listaTabuMov.size() > tenenciaTabu) {
+                        listaTabuMov.remove(0);
                     }
                 }
 
-                listaTabu.add(mejorVecino);
-                if (listaTabu.size() > tenenciaTabu) {
-                    listaTabu.remove(0);
-                }
-
-                listaTabuMov.add(cambiosMejorVecino);
-                if (listaTabuMov.size() > tenenciaTabu) {
-                    listaTabuMov.remove(0);
-                }
+                anterior = mejorVecino;
 
                 if (mejorCosteVecino < costeActual) {
                     mejora = true;
@@ -239,6 +248,7 @@ public class MultiArranque {
                     }
 
                     listaTabu.clear();
+                    listaTabuMov.clear();
                 }
 
             }
@@ -252,7 +262,8 @@ public class MultiArranque {
 
     }
 
-    public static void masVisitados(long[][] memFrec, Vector<Double> nuevaSol, double rmin, double rmax) {
+    public static void masVisitados(long[][] memFrec, Vector<Double> nuevaSol, double rmin,
+            double rmax) {
         memFrec = new long[10][10];
         int tam = nuevaSol.size();
         double mayor;

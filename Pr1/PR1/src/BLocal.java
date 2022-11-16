@@ -9,21 +9,21 @@ public class BLocal {
     private final static double intervaloAlto = 1 + 0.1;
 
     public static double Blocal3(int tam, long evaluaciones, Vector<Double> SolActual, double rmin,
-            double rmax, int selector) {
+            double rmax, int selector, int iteraciones) {
 
         Random rand = new Random();
 
         for (int i = 0; i < tam; i++) {
-            SolActual.add(i, Math.floor(Math.random() * (rmax - rmin + 1) + rmin));
+            SolActual.add(i, Math.random() * (rmax - rmin + 1) + rmin);
         }
 
-        Aux.mostrarVector(SolActual);
+        //Aux.mostrarVector(SolActual);
 
         Vector<Double> vecino = new Vector<Double>(tam);
         Vector<Double> mejorVecino = new Vector<>(SolActual);
         double mejorCosteVecino;
         double mejorCoste = Funciones.CalcularCoste(SolActual, selector);
-        int iteraciones = 0;
+        iteraciones = 0;
         boolean mejora = true;
 
         while (mejora && iteraciones < evaluaciones) {
@@ -42,7 +42,7 @@ public class BLocal {
                         if (sup > rmax) {
                             sup = rmax;
                         }
-                        vecino.add(k, Math.floor(Math.random() * (sup - inf + 1) + sup));
+                        vecino.add(k, Math.random() * (sup - inf + 1) + sup);
                     } else
                         vecino.add(k, SolActual.get(k));
 
@@ -60,27 +60,25 @@ public class BLocal {
                 iteraciones++;
             }
         }
-
-        System.out.println("Iteraciones:" + iteraciones);
         return mejorCoste;
     }
 
-    public static double BlocalK(int tam, long evaluaciones, Vector<Double> SolActual, double rmin, double rmax, int selector) {
+    public static double BlocalK(int tam, long evaluaciones, Vector<Double> SolActual, double rmin, double rmax, int selector,int iteraciones) {
 
         Random rand = new Random();
 
         for (int i = 0; i < tam; i++) {
-            SolActual.add(i, Math.floor(Math.random() * (rmax - rmin + 1) + rmin));
+            SolActual.add(i, Math.random() * (rmax - rmin + 1) + rmin);
         }
 
-        Aux.mostrarVector(SolActual);
+        //Aux.mostrarVector(SolActual);
 
         Vector<Double> vecino = new Vector<Double>(tam);
         Vector<Double> mejorVecino;
         mejorVecino = SolActual;
         double mejorCosteVecino;
         double mejorCoste = Funciones.CalcularCoste(SolActual, selector);
-        int iteraciones = 0;
+        iteraciones = 0;
         boolean mejora = true;
 
         while (mejora && iteraciones < evaluaciones) {
@@ -100,7 +98,7 @@ public class BLocal {
                         if (sup > rmax) {
                             sup = rmax;
                         }
-                        vecino.add(k, Math.floor(Math.random() * (sup - inf + 1) + sup));
+                        vecino.add(k, Math.random() * (sup - inf + 1) + sup);
                     } else
                         vecino.add(k, SolActual.get(k));
 
@@ -119,7 +117,6 @@ public class BLocal {
             }
         }
 
-        System.out.println("Iteraciones:" + iteraciones);
         return mejorCoste;
     }
 
