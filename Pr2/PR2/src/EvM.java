@@ -10,7 +10,7 @@ public class EvM {
             cr.add(new Cromosoma(tam));
         }
 
-        ArrayList<ArrayList<Double>> nuevaG = new ArrayList<ArrayList<Double>>(tam);
+        ArrayList<ArrayList<Double>> gen1 = new ArrayList<ArrayList<Double>>(tam);
         ArrayList<Double> costesH = new ArrayList<Double>(tamPoblacion);
         ArrayList<Double> costesH2 = new ArrayList<Double>(tamPoblacion);
 
@@ -23,7 +23,7 @@ public class EvM {
 
         double mejorCoste = Double.MAX_VALUE, mejorCosteHijo = Double.MAX_VALUE, mejorCosteGlobal;
 
-        ArrayList<ArrayList<Double>> nuevaG2 = new ArrayList<ArrayList<Double>>(tam);
+        ArrayList<ArrayList<Double>> gen2 = new ArrayList<ArrayList<Double>>(tam);
 
         for (int i = 0; i < tamPoblacion; i++) {
             Funciones.cargaAleatoria(cr.get(i).getCromosomas(), tam, rmin, rmax);
@@ -39,18 +39,29 @@ public class EvM {
         mejorCromosomaGlobal = mejorCromosoma;
 
         int cont = tamPoblacion;
-        int l = 0;
+        int it = 0;
 
         while (cont < evaluaciones) {
-            l++;
-            for (int k = 0, i, j; k < tamPoblacion; k++) {
+            it++;
+
+            // torneo entre pares a modularizar
+            for (int k = 0; k < tamPoblacion; k++) {
+                int i, j;
                 i = (int) (Math.random() * tamPoblacion);
-                while (i == (j = (int) (Math.random() * tamPoblacion)));
-                posicion.add(k, ((cr.get(i).getCoste() < cr.get(j).getCoste()) ? i : j));
+                j = (int) (Math.random() * tamPoblacion);
+                while (i == j) {
+                    j = (int) (Math.random() * tamPoblacion);
+                }
+
+                if (cr.get(i).getCoste() < cr.get(j).getCoste()) {
+                    posicion.add(k, i);
+                } else {
+                    posicion.add(k, j);
+                }
             }
 
             for (int i = 0; i < tamPoblacion; i++) {
-                nuevaG.add(i, cr.get(posicion.get(i)).getCromosomas());
+                gen1.add(i, cr.get(posicion.get(i)).getCromosomas());
                 costesH.add(i, cr.get(posicion.get(i)).getCoste());
             }
 
@@ -72,41 +83,52 @@ public class EvM {
             for (int i = 0; i < tamPoblacion; i++) {
 
                 coste1 = (int) (Math.random() * tamPoblacion);
-                while (coste1 == (coste2 = (int) (Math.random() * tamPoblacion)));
+                coste2 = (int) (Math.random() * tamPoblacion);
+
+                while (coste1 == coste2) {
+                    coste2 = (int) (Math.random() * tamPoblacion);
+                }
 
                 if (costesH.get(coste1) < costesH.get(coste2)) {
                     mejorCoste1 = costesH.get(coste1);
-                    mejorCromosoma1 = nuevaG.get(coste1);
+                    mejorCromosoma1 = gen1.get(coste1);
                     posMAnterior = coste1;
                 } else {
                     mejorCoste1 = costesH.get(coste2);
-                    mejorCromosoma1 = nuevaG.get(coste2);
+                    mejorCromosoma1 = gen1.get(coste2);
                     posMAnterior = coste2;
                 }
 
-                while (posMAnterior == (coste3 = (int) (Math.random() * tamPoblacion)));
-                while (posMAnterior == (coste4 = (int) (Math.random() * tamPoblacion)));
+                coste3 = (int) (Math.random() * tamPoblacion);
+                while (posMAnterior == coste3) {
+                    coste3 = (int) (Math.random() * tamPoblacion);
+                }
+
+                coste4 = (int) (Math.random() * tamPoblacion);
+                while (posMAnterior == coste4) {
+                    coste4 = (int) (Math.random() * tamPoblacion);
+                }
 
                 if (costesH.get(coste3) < costesH.get(coste4)) {
                     mejorCoste2 = costesH.get(coste3);
-                    mejorCromosoma2 = nuevaG.get(coste3);
+                    mejorCromosoma2 = gen1.get(coste3);
                 } else {
                     mejorCoste2 = costesH.get(coste4);
-                    mejorCromosoma2 = nuevaG.get(coste4);
+                    mejorCromosoma2 = gen1.get(coste4);
                 }
 
                 x = Math.random();
                 if (x < probCruce) {
                     Funciones.cruceMedia(mejorCromosoma1, mejorCromosoma2, hijos, tam);
-                    nuevaG2.add(i, hijos);
+                    gen2.add(i, hijos);
                     marcados.set(i, true);
                 } else {
-                    nuevaG2.add(i, mejorCromosoma1);
+                    gen2.add(i, mejorCromosoma1);
                     costesH2.add(i, mejorCoste1);
                 }
             }
 
-            nuevaG = nuevaG2;
+            gen1 = gen2;
             costesH = costesH2;
 
             // Mutamos
@@ -118,7 +140,7 @@ public class EvM {
                     if (x < probMutacion) {
                         m = true;
                         double valor = rmin + (rmax - rmin) * Math.random();
-                        Funciones.mutacion(nuevaG.get(i), j, valor);
+                        Funciones.mutacion(gen1.get(i), j, valor);
                     }
                 }
                 if (m) {
@@ -128,7 +150,7 @@ public class EvM {
 
             for (int i = 0; i < tamPoblacion; i++) {
                 if (marcados.get(i)) {
-                    costesH.set(i, Funciones.CalcularCoste(nuevaG.get(i), selector));
+                    costesH.set(i, Funciones.CalcularCoste(gen1.get(i), selector));
                     cont++;
                 }
                 if (costesH.get(i) < mejorCosteHijo) {
@@ -138,8 +160,8 @@ public class EvM {
             }
 
             boolean aux = false;
-            for (int i = 0; i < nuevaG.size() && !aux; i++) {
-                if (nuevaG.get(i).equals(mejorCromosomaGlobal)) {
+            for (int i = 0; i < gen1.size() && !aux; i++) {
+                if (gen1.get(i).equals(mejorCromosomaGlobal)) {
                     aux = true;
                 }
             }
@@ -148,16 +170,20 @@ public class EvM {
                 int pos1, pos2, pos3, pos4;
                 pos1 = (int) (Math.random() * tamPoblacion);
                 pos2 = (int) (Math.random() * tamPoblacion);
+                while (pos1 == pos2) {
+                    pos2 = (int) (Math.random() * tamPoblacion);
+                }
+
                 pos3 = (int) (Math.random() * tamPoblacion);
+                while ((pos1 == pos2) && (pos1 == pos3) && pos2 == pos3) {
+                    pos3 = (int) (Math.random() * tamPoblacion);
+                }
+
                 pos4 = (int) (Math.random() * tamPoblacion);
-
-                while (pos1 == (pos2 = (int) (Math.random() * tamPoblacion)));
-                while ((pos1 == pos2) && (pos1 == (pos3 = (int) (Math.random() * tamPoblacion)))
-                        && pos2 == pos3);
                 while ((pos1 == pos2) && (pos1 == pos3)
-                        && (pos1 == (pos4 = (int) (Math.random() * tamPoblacion))) && (pos2 == pos3)
-                        && (pos2 == pos4) && (pos3 == pos4));
-
+                        && (pos1 == (pos4) && (pos2 == pos3) && (pos2 == pos4) && (pos3 == pos4))) {
+                    pos4 = (int) (Math.random() * tamPoblacion);
+                }
                 if (costesH.get(pos1) > costesH.get(pos2) && costesH.get(pos1) > costesH.get(pos3)
                         && costesH.get(pos1) > costesH.get(pos4)) {
                     peor = pos1;
@@ -177,31 +203,31 @@ public class EvM {
                     }
                 }
 
-                nuevaG.set(peor, mejorCromosoma);
+                gen1.set(peor, mejorCromosoma);
                 costesH.set(peor, mejorCoste);
 
                 if (mejorCoste < mejorCosteHijo) {
                     mejorCosteHijo = mejorCoste;
-                    nuevaG.set(mejorCromosomaHijo, mejorCromosoma);
+                    gen1.set(mejorCromosomaHijo, mejorCromosoma);
                 }
             }
 
-            mejorCromosoma = nuevaG.get(mejorCromosomaHijo);
+            mejorCromosoma = gen1.get(mejorCromosomaHijo);
             mejorCoste = mejorCosteHijo;
 
             if (mejorCosteHijo < mejorCosteGlobal) {
                 mejorCosteGlobal = mejorCosteHijo;
-                mejorCromosomaGlobal = nuevaG.get(mejorCromosomaHijo);
+                mejorCromosomaGlobal = gen1.get(mejorCromosomaHijo);
             }
 
             // costes=costesH;
-            // cromosomas=nuevag;
+            // cromosomas=gen1;
 
         }
 
         sol = mejorCromosomaGlobal;
-        System.out.println("Total evaluaciones: " + cont);
-        System.out.println("Total Iteraciones: " + l);
+        System.out.println("Evaluaciones totales: " + cont);
+        System.out.println("Iteraciones totales: " + it);
         return mejorCosteGlobal;
     }
 
