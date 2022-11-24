@@ -1,9 +1,13 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class EvM {
 
-    public double EvMedia(int tamPoblacion, int tam, int evaluaciones, ArrayList<Double> sol,
-            double rmin, double rmax, double probMutacion, double probCruce, int selector) {
+    public static double EvMedia(int tamPoblacion, int tam, int evaluaciones, ArrayList<Double> sol,
+            double rmin, double rmax, double probMutacion, double probCruce, int selector,
+            long semilla) {
+
+        Random r = new Random(semilla);
 
         ArrayList<Cromosoma> cr = new ArrayList<Cromosoma>(tamPoblacion);
         for (int i = 0; i < tamPoblacion; i++) {
@@ -30,7 +34,7 @@ public class EvM {
         double mejorCoste = Double.MAX_VALUE, mejorCosteHijo = Double.MAX_VALUE, mejorCosteGlobal;
 
         for (int i = 0; i < tamPoblacion; i++) {
-            Funciones.cargaAleatoria(cr.get(i).getCromosomas(), tam, rmin, rmax);
+            Funciones.cargaAleatoria(cr.get(i).getCromosomas(), tam, rmin, rmax, r);
             cr.get(i).setCoste(Funciones.CalcularCoste(cr.get(i).getCromosomas(), selector));
 
             if (cr.get(i).getCoste() < mejorCoste) {
@@ -51,10 +55,10 @@ public class EvM {
             // torneo entre pares a modularizar
             for (int k = 0; k < tamPoblacion; k++) {
                 int i, j;
-                i = (int) (Math.random() * tamPoblacion);
-                j = (int) (Math.random() * tamPoblacion);
+                i = (int) (r.nextDouble() * tamPoblacion);
+                j = (int) (r.nextDouble() * tamPoblacion);
                 while (i == j) {
-                    j = (int) (Math.random() * tamPoblacion);
+                    j = (int) (r.nextDouble() * tamPoblacion);
                 }
 
                 if (cr.get(i).getCoste() < cr.get(j).getCoste()) {
@@ -86,11 +90,11 @@ public class EvM {
 
             for (int i = 0; i < tamPoblacion; i++) {
 
-                coste1 = (int) (Math.random() * tamPoblacion);
-                coste2 = (int) (Math.random() * tamPoblacion);
+                coste1 = (int) (r.nextDouble() * tamPoblacion);
+                coste2 = (int) (r.nextDouble() * tamPoblacion);
 
                 while (coste1 == coste2) {
-                    coste2 = (int) (Math.random() * tamPoblacion);
+                    coste2 = (int) (r.nextDouble() * tamPoblacion);
                 }
 
                 if (gen1.get(coste1).getCoste() < gen1.get(coste2).getCoste()) {
@@ -103,14 +107,14 @@ public class EvM {
                     posMAnterior = coste2;
                 }
 
-                coste3 = (int) (Math.random() * tamPoblacion);
+                coste3 = (int) (r.nextDouble() * tamPoblacion);
                 while (posMAnterior == coste3) {
-                    coste3 = (int) (Math.random() * tamPoblacion);
+                    coste3 = (int) (r.nextDouble() * tamPoblacion);
                 }
 
-                coste4 = (int) (Math.random() * tamPoblacion);
+                coste4 = (int) (r.nextDouble() * tamPoblacion);
                 while (posMAnterior == coste4) {
-                    coste4 = (int) (Math.random() * tamPoblacion);
+                    coste4 = (int) (r.nextDouble() * tamPoblacion);
                 }
 
                 if (gen1.get(coste3).getCoste() < gen1.get(coste4).getCoste()) {
@@ -121,7 +125,7 @@ public class EvM {
                     mejorCromosoma2 = gen1.get(coste4).getCromosomas();
                 }
 
-                x = Math.random();
+                x = r.nextDouble();
                 if (x < probCruce) {
                     Funciones.cruceMedia(mejorCromosoma1, mejorCromosoma2, hijos, tam);
                     gen2.get(i).setCromosomas(hijos);
@@ -141,11 +145,11 @@ public class EvM {
 
             for (int i = 0; i < tamPoblacion; i++) {
                 boolean m = false;
-                for (int j = 0; i < tam; j++) {
-                    x = Math.random();
+                for (int j = 0; j < tam; j++) {
+                    x = r.nextDouble();
                     if (x < probMutacion) {
                         m = true;
-                        double valor = rmin + (rmax - rmin) * Math.random();
+                        double valor = rmin + (rmax - rmin) * r.nextDouble();
                         Funciones.mutacion(gen1.get(i).getCromosomas(), j, valor);
                     }
                 }
@@ -156,7 +160,8 @@ public class EvM {
 
             for (int i = 0; i < tamPoblacion; i++) {
                 if (marcados.get(i)) {
-                    gen1.get(i).setCoste(Funciones.CalcularCoste(gen1.get(i).getCromosomas(), selector));
+                    gen1.get(i).setCoste(
+                            Funciones.CalcularCoste(gen1.get(i).getCromosomas(), selector));
                     cont++;
                 }
 
@@ -175,21 +180,21 @@ public class EvM {
 
             if (!aux) {
                 int pos1, pos2, pos3, pos4;
-                pos1 = (int) (Math.random() * tamPoblacion);
-                pos2 = (int) (Math.random() * tamPoblacion);
+                pos1 = (int) (r.nextDouble() * tamPoblacion);
+                pos2 = (int) (r.nextDouble() * tamPoblacion);
                 while (pos1 == pos2) {
-                    pos2 = (int) (Math.random() * tamPoblacion);
+                    pos2 = (int) (r.nextDouble() * tamPoblacion);
                 }
 
-                pos3 = (int) (Math.random() * tamPoblacion);
+                pos3 = (int) (r.nextDouble() * tamPoblacion);
                 while ((pos1 == pos2) && (pos1 == pos3) && pos2 == pos3) {
-                    pos3 = (int) (Math.random() * tamPoblacion);
+                    pos3 = (int) (r.nextDouble() * tamPoblacion);
                 }
 
-                pos4 = (int) (Math.random() * tamPoblacion);
+                pos4 = (int) (r.nextDouble() * tamPoblacion);
                 while ((pos1 == pos2) && (pos1 == pos3)
                         && (pos1 == (pos4) && (pos2 == pos3) && (pos2 == pos4) && (pos3 == pos4))) {
-                    pos4 = (int) (Math.random() * tamPoblacion);
+                    pos4 = (int) (r.nextDouble() * tamPoblacion);
                 }
 
                 if (gen1.get(pos1).getCoste() > gen1.get(pos2).getCoste()
