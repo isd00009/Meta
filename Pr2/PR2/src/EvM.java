@@ -168,7 +168,7 @@ public class EvM {
 
             boolean aux = false;
             for (int i = 0; i < gen1.size() && !aux; i++) {
-                if (gen1.get(i).equals(mejorCromosomaGlobal)) {
+                if (gen1.get(i).getCromosomas().equals(mejorCromosomaGlobal)) {
                     aux = true;
                 }
             }
