@@ -188,13 +188,12 @@ public class EvBLX {
                 }
 
                 pos3 = (int) (r.nextDouble() * tamPoblacion);
-                while ((pos1 == pos2) && (pos1 == pos3) && pos2 == pos3) {
+                while (pos1 == pos3 || pos2 == pos3) {
                     pos3 = (int) (r.nextDouble() * tamPoblacion);
                 }
 
                 pos4 = (int) (r.nextDouble() * tamPoblacion);
-                while ((pos1 == pos2) && (pos1 == pos3)
-                        && (pos1 == (pos4) && (pos2 == pos3) && (pos2 == pos4) && (pos3 == pos4))) {
+                while (pos1 == pos4 || pos2 == pos4 || pos3 == pos4) {
                     pos4 = (int) (r.nextDouble() * tamPoblacion);
                 }
 
