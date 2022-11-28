@@ -1,0 +1,3 @@
+Algoritmo(EvM,EvBLX,ED)=EvM
+Semilla(1-5)=2
+Función de evaluación=Ackley

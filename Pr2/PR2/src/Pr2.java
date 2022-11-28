@@ -15,12 +15,19 @@ public class Pr2 {
         double alpha = 0.5;
         ArrayList<Double> sol = new ArrayList<Double>();
 
-        LeerArchivo leer = new LeerArchivo("Ackley.txt");
+
+        
+
+
+
+        LeerArchivo leer = new LeerArchivo();
+        leer.leerConfig();
+
         tam = leer.getTam();
         nombreAlg = leer.getNombreAlg();
         rmin = leer.getRmin();
         rmax = leer.getRmax();
-        semilla = leer.getSemilla()[0];
+        semilla = leer.getSemilla();
         evaluaciones = leer.getEvaluaciones();
         nAlg = leer.getnAlg();
 

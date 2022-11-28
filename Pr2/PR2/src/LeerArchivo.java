@@ -1,28 +1,37 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Vector;
 
 public class LeerArchivo {
 
     private String nombreAlg;
-    private long semilla[];
+    private int semillas[];
+    private int semilla;
     private int tam;
     private int evaluaciones;
     private double rmin, rmax;
     private int nAlg;
+    private String algoritmoEjecucion;
 
+    public LeerArchivo() {
+        nombreAlg = "";
+        semillas = new int[5];
+        tam = 0;
+        evaluaciones = 0;
+        rmin = 0;
+        rmax = 0;
+        nAlg = 0;
+    }
 
-    public LeerArchivo(String fichero){
-
-        semilla = new long[5];
+    private void leerFuncEv(String nombreFichero) {
+        semillas = new int[5];
 
         try {
-            FileReader fr = new FileReader(fichero);
+            FileReader fr = new FileReader(nombreFichero);
             BufferedReader br = new BufferedReader(fr);
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] campos = linea.split("=");
-                switch(campos[0]){
+                switch (campos[0]) {
                     case "function":
                         String[] v = campos[1].split(" ");
                         nombreAlg = v[0];
@@ -31,8 +40,28 @@ public class LeerArchivo {
                         break;
                     case "dni":
                         String[] v2 = campos[1].split(" ");
-                        for(int i=0; i<v2.length; i++){
-                            semilla[i] = Long.parseLong(v2[i]);
+                        for (int i = 0; i < v2.length; i++) {
+                            semillas[i] = Integer.parseInt(v2[i]);
+                        }
+                        switch (semilla) {
+                            case 1:
+                                semilla = semillas[0];
+                                break;
+                            case 2:
+                                semilla = semillas[1];
+                                break;
+                            case 3:
+                                semilla = semillas[2];
+                                break;
+                            case 4:
+                                semilla = semillas[3];
+                                break;
+                            case 5:
+                                semilla = semillas[4];
+                                break;
+                            default:
+                                System.out.println("Semilla no válida");
+                                break;
                         }
                         break;
                     case "evaluaciones":
@@ -52,26 +81,39 @@ public class LeerArchivo {
         }
     }
 
-    void cargarSolucion(Vector<Integer> s, int tam){
-        for(int i = 0; i < tam; i++){
-            s.addElement(i);
-        }
-
-        int r;
-        for(int i = tam - 1; i > 0; i--){
-            r = (int) (Math.random() * (i + 1));
-            int aux = s.elementAt(i);
-            s.setElementAt(s.elementAt(r), i);
-            s.setElementAt(aux, r);
+    public void leerConfig() {
+        try {
+            FileReader fr = new FileReader("./config.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] campos = linea.split("=");
+                switch (campos[0]) {
+                    case "Algoritmo(EvM,EvBLX,ED)":
+                        algoritmoEjecucion = campos[1];
+                        break;
+                    case "Semilla(1-5)":
+                        semilla = Integer.parseInt(campos[1]);
+                        break;
+                    case "Función de evaluación":
+                        leerFuncEv(campos[1] + ".txt");
+                        break;
+                }
+            }
+            br.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    //Getters
+
+
+    // Getters
     public String getNombreAlg() {
         return nombreAlg;
     }
 
-    public long[] getSemilla() {
+    public int getSemilla() {
         return semilla;
     }
 
