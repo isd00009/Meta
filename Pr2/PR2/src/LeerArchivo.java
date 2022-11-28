@@ -109,6 +109,11 @@ public class LeerArchivo {
 
 
     // Getters
+
+    public String getAlgoritmoEjecucion() {
+        return algoritmoEjecucion;
+    }
+
     public String getNombreAlg() {
         return nombreAlg;
     }
