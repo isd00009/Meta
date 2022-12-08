@@ -1,0 +1,6 @@
+Nombre del algoritmo: Trid
+Tamaño del problema: 10
+Rango de valores: [-1.0, 1.0]
+Semilla: 25009459
+Coste EvBLX-MAPE: 40.87688850098062
+Tiempo de ejecución: 1006 ms

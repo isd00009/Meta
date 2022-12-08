@@ -1,0 +1,6 @@
+Nombre del algoritmo: Ackley
+Tamaño del problema: 10
+Rango de valores: [-32768.0, 32768.0]
+Semilla: 45925009
+Coste EvD: 20.0
+Tiempo de ejecución: 34 ms

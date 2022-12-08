@@ -1,0 +1,6 @@
+Nombre del algoritmo: Trid
+Tamaño del problema: 10
+Rango de valores: [-1.0, 1.0]
+Semilla: 92500945
+Coste EvD-RMSE: 6648.224074489103
+Tiempo de ejecución: 1021 ms

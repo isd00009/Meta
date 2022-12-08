@@ -1,0 +1,6 @@
+Nombre del algoritmo: EvM
+Tamaño del problema: 10
+Rango de valores: [-1.0, 1.0]
+Semilla: 59250094
+Coste EvM-MAPE: 23.929273157264138
+Tiempo de ejecución: 963 ms

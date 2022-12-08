@@ -1,5 +1,5 @@
-Algoritmo(EvM,EvBLX,EvD)=EvM
-Semilla(1-5)=2
-Función de evaluación=Griewank
+Algoritmo(EvM,EvBLX,EvD)=EvD
+Semilla(1-5)=5
+Función de evaluación=Trid
 Evaluacion con fichero de texto(Si/No)=Si
-Tipo de error(1-MAPE,2-RMSE)=1
+Tipo de error(1-MAPE,2-RMSE)=2

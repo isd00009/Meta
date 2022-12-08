@@ -1,0 +1,6 @@
+Nombre del algoritmo: EvM
+Tamaño del problema: 10
+Rango de valores: [-1.0, 1.0]
+Semilla: 92500945
+Coste EvM-RMSE: 900.4850380547244
+Tiempo de ejecución: 908 ms

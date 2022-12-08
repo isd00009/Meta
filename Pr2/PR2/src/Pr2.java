@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Pr2 {
     public static void main(String[] args) throws Exception {
         int tam = 10;
-        int tamPoblacion = 50;
         String nombreAlg;
         String algoritmoEjecucion;
         int nAlg;
@@ -11,9 +10,6 @@ public class Pr2 {
         long semilla;
         int evaluaciones = 10000;
         int op = 0;
-        double probMutacion = 0.01;
-        double probCruce = 0.7;
-        double alpha = 0.5;
         ArrayList<Double> sol = new ArrayList<Double>();
         ArrayList<ArrayList<Double>> observations = new ArrayList<ArrayList<Double>>();
         double resultado = 0;
@@ -57,7 +53,7 @@ public class Pr2 {
 
 
         EscribirArchivo escribe = new EscribirArchivo(nombreAlg, tam, rmin, rmax, semilla,
-                evaluaciones, nAlg, op, algoritmoEjecucion, tipo);
+                evaluaciones, nAlg, op, algoritmoEjecucion, tipo, observations);
 
         /*
          * switch (algoritmoEjecucion) { case "EvM": resultado = EvM.EvMedia(tamPoblacion, tam,

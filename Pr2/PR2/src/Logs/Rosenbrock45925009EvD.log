@@ -1,0 +1,6 @@
+Nombre del algoritmo: Rosenbrock
+Tamaño del problema: 10
+Rango de valores: [-5.0, 10.0]
+Semilla: 45925009
+Coste EvD: 35267.22420943057
+Tiempo de ejecución: 42 ms

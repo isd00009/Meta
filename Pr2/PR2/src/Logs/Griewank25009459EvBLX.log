@@ -1,0 +1,6 @@
+Nombre del algoritmo: Griewank
+Tamaño del problema: 10
+Rango de valores: [-1000.0, 1000.0]
+Semilla: 25009459
+Coste EvBLX: 210.83406751865664
+Tiempo de ejecución: 33 ms

@@ -1,0 +1,6 @@
+Nombre del algoritmo: Trid
+Tamaño del problema: 10
+Rango de valores: [-1.0, 1.0]
+Semilla: 25009459
+Coste EvD-MAPE: 62.432187619425456
+Tiempo de ejecución: 1001 ms
