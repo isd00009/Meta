@@ -1,3 +1,5 @@
-Algoritmo(EvM,EvBLX,ED)=EvM
+Algoritmo(EvM,EvBLX,EvD)=EvM
 Semilla(1-5)=2
 Función de evaluación=Griewank
+Evaluacion con fichero de texto(Si/No)=Si
+Tipo de error(1-MAPE,2-RMSE)=1

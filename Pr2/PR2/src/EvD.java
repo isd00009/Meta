@@ -4,7 +4,8 @@ import java.util.Random;
 public class EvD {
 
     public static double evDif(int tamPoblacion, int tam, int evaluaciones, ArrayList<Double> sol,
-            double rmin, double rmax, int selector, long semilla) {
+            double rmin, double rmax, int selector, long semilla,
+            ArrayList<ArrayList<Double>> observations, int tipo) {
         Random r = new Random(semilla);
         ArrayList<Cromosoma> cr = new ArrayList<Cromosoma>(tamPoblacion);
         for (int i = 0; i < tamPoblacion; i++) {
@@ -17,7 +18,8 @@ public class EvD {
 
         for (int i = 0; i < tamPoblacion; i++) {
             Funciones.cargaAleatoria(cr.get(i).getCromosomas(), tam, rmin, rmax, r);
-            cr.get(i).setCoste(Funciones.CalcularCoste(cr.get(i).getCromosomas(), selector));
+            cr.get(i).setCoste(Funciones.CalcularCoste(cr.get(i).getCromosomas(), selector,
+                    observations, tipo));
             if (cr.get(i).getCoste() < mejorCoste) {
                 mejorCoste = cr.get(i).getCoste();
                 mejorCromosoma = cr.get(i).getCromosomas();
@@ -56,49 +58,70 @@ public class EvD {
                 ran1 = cr.get(r1).getCromosomas();
                 ran2 = cr.get(r2).getCromosomas();
 
-                while (k1 != i && k1 != r1 && k1 != r2 && k2 != i && k2 != r1 && k2 != r2 && k3 != i && k3 != r1
-                        && k3 != r2) {
+                while (k1 != i && k1 != r1 && k1 != r2 && k2 != i && k2 != r1 && k2 != r2 && k3 != i
+                        && k3 != r1 && k3 != r2) {
                     k1 = (int) (r.nextDouble() * tamPoblacion);
 
-                    while(k1 == k2){
+                    while (k1 == k2) {
                         k2 = (int) (r.nextDouble() * tamPoblacion);
                     }
-                    while(k1 == k3 || k2 == k3){
+                    while (k1 == k3 || k2 == k3) {
                         k3 = (int) (r.nextDouble() * tamPoblacion);
                     }
                 }
 
-                if(cr.get(k1).getCoste() < cr.get(k2).getCoste() && cr.get(k1).getCoste() < cr.get(k3).getCoste()){
+                if (cr.get(k1).getCoste() < cr.get(k2).getCoste()
+                        && cr.get(k1).getCoste() < cr.get(k3).getCoste()) {
                     objetivo = cr.get(k1).getCromosomas();
-                }else{
-                    if(cr.get(k2).getCoste() < cr.get(k3).getCoste()){
+                } else {
+                    if (cr.get(k2).getCoste() < cr.get(k3).getCoste()) {
                         objetivo = cr.get(k2).getCromosomas();
-                    }else{
+                    } else {
                         objetivo = cr.get(k3).getCromosomas();
                     }
                 }
 
-                double F= r.nextDouble();
+                double F = r.nextDouble();
 
-                for (int j=0; j<tam; j++){
-                    double aletaorio= r.nextDouble();
-                    if(aletaorio <= 0.5){
-                        nuevo.add(j, padre.get(j) + F*(ran1.get(j)-ran2.get(j)));
-                        if(nuevo. get(j) < rmin){
+                for (int j = 0; j < tam; j++) {
+                    double aletaorio = r.nextDouble();
+                    if (aletaorio <= 0.5) {
+                        nuevo.add(j, padre.get(j) + F * (ran1.get(j) - ran2.get(j)));
+                        if (nuevo.get(j) < rmin) {
                             nuevo.set(j, rmin);
-                        }else{
-                            if(nuevo.get(j) > rmax){
+                        } else {
+                            if (nuevo.get(j) > rmax) {
                                 nuevo.set(j, rmax);
                             }
                         }
-                    }else{
+                    } else {
                         nuevo.add(j, objetivo.get(j));
+                    }
+                }
+
+                double coste = Funciones.CalcularCoste(nuevo, selector, observations, tipo);
+                cont++;
+                if (coste < cr.get(i).getCoste()) {
+                    cr.get(i).setCromosomas(nuevo);
+                    cr.get(i).setCoste(coste);
+                    if (coste < mejorCoste) {
+                        mejorCoste = coste;
+                        mejorCromosoma = nuevo;
                     }
                 }
             }
 
+            if (mejorCoste < mejorCosteGlobal) {
+                mejorCosteGlobal = mejorCoste;
+                mejorCromosomaGlobal = mejorCromosoma;
+            }
         }
 
-        return 0;
+        sol = mejorCromosomaGlobal;
+
+        System.out.println("Evaluaciones totales: " + cont);
+        System.out.println("Iteraciones totales: " + it);
+        return mejorCosteGlobal;
+
     }
 }

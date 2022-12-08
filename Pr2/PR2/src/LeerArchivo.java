@@ -10,7 +10,9 @@ public class LeerArchivo {
     private int evaluaciones;
     private double rmin, rmax;
     private int nAlg;
+    private int tipo;
     private String algoritmoEjecucion;
+    private boolean ficheroTexto;
 
     public LeerArchivo() {
         nombreAlg = "";
@@ -20,6 +22,8 @@ public class LeerArchivo {
         rmin = 0;
         rmax = 0;
         nAlg = 0;
+        tipo = 0;
+        ficheroTexto = false;
     }
 
     private void leerFuncEv(String nombreFichero) {
@@ -89,7 +93,7 @@ public class LeerArchivo {
             while ((linea = br.readLine()) != null) {
                 String[] campos = linea.split("=");
                 switch (campos[0]) {
-                    case "Algoritmo(EvM,EvBLX,ED)":
+                    case "Algoritmo(EvM,EvBLX,EvD)":
                         algoritmoEjecucion = campos[1];
                         break;
                     case "Semilla(1-5)":
@@ -97,6 +101,21 @@ public class LeerArchivo {
                         break;
                     case "Función de evaluación":
                         leerFuncEv(campos[1] + ".txt");
+                        break;
+                    case "Evaluacion con fichero de texto(Si/No)":
+                        if (campos[1].equals("Si")) {
+                            nAlg = 11;
+                            rmin = -1;
+                            rmax = 1;
+                            ficheroTexto = true;
+                        }
+                        break;
+                    case "Tipo de error(1-MAPE,2-RMSE)":
+                        if (campos[1].equals("1")) {
+                            tipo = 1;
+                        } else if (campos[1].equals("2")) {
+                            tipo = 2;
+                        }
                         break;
                 }
             }
@@ -142,4 +161,11 @@ public class LeerArchivo {
         return nAlg;
     }
 
+    public int getTipo() {
+        return tipo;
+    }
+
+    public boolean isFicheroTexto() {
+        return ficheroTexto;
+    }
 }

@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -163,7 +165,61 @@ public class Funciones {
         return term1 + sum;
     }
 
-    static double CalcularCoste(ArrayList<Double> x, int selector) {
+    public static double MAPE(ArrayList<Double> real, ArrayList<Double> estimation) {
+        int N = real.size();
+        double score;
+        double sum = 0.0;
+        double num = 0.0;
+        for (int i = 0; i < N; i++) {
+            if (real.get(i) != 0) {
+                sum += Math.abs((real.get(i) - estimation.get(i)) / Math.abs(real.get(i)));
+                num++;
+            }
+        }
+        score = sum / num;
+        return score;
+    }
+
+    public static double RMSE(ArrayList<Double> real, ArrayList<Double> estimation) {
+        int N = real.size();
+        double score;
+        double sum = 0;
+        for (int i = 0; i < N; i++) {
+            sum += Math.pow(real.get(i) - estimation.get(i), 2);
+        }
+        score = Math.sqrt(1.0 / N * sum);
+        return score;
+    }
+
+    public static double potencia(ArrayList<Double> a, ArrayList<ArrayList<Double>> observations,
+            int tipo) {
+
+        ArrayList<Double> real = new ArrayList<Double>();
+        ArrayList<Double> estimation = new ArrayList<Double>();
+        double p, error = 0;
+
+        for (int i = 0; i < observations.size(); i++) {
+            p = observations.get(i).get(0) * (a.get(0) + (a.get(1) * observations.get(i).get(0))
+                    + (a.get(2) * observations.get(i).get(2))
+                    + (a.get(3) * observations.get(i).get(3))
+                    + (a.get(4) * observations.get(i).get(4)));
+            estimation.add(p);
+            real.add(observations.get(i).get(5));
+        }
+
+        if (tipo == 1) {
+            error = MAPE(real, estimation);
+        } else if (tipo == 2) {
+            error = RMSE(real, estimation);
+        } else {
+            error = -1;
+        }
+
+        return error;
+    }
+
+    static double CalcularCoste(ArrayList<Double> x, int selector,
+            ArrayList<ArrayList<Double>> observations, int tipo) {
         switch (selector) {
             case 1:
                 return Griewank(x);
@@ -185,9 +241,34 @@ public class Funciones {
                 return Trid(x);
             case 10:
                 return DixonPr(x);
+            case 11:
+                return potencia(x, observations, tipo);
             default:
                 return -1;
         }
+    }
+
+    static void cargarDaido(String archivo, ArrayList<ArrayList<Double>> observations) {
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(archivo));
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                if (linea.contains("DNI")) {
+                    continue;
+                }
+                String[] campos = linea.split(",");
+                ArrayList<Double> obs = new ArrayList<Double>();
+                for (int i = 0; i < campos.length; i++) {
+                    obs.add(Double.parseDouble(campos[i]));
+                }
+                observations.add(obs);
+            }
+            br.close();
+        } catch (Exception e) {
+            System.out.println("Error al leer el fichero");
+        }
+
     }
 
     static void cargaAleatoria(ArrayList<Double> al, int tam, double rmin, double rmax, Random r) {

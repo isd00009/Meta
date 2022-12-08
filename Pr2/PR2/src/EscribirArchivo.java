@@ -7,6 +7,8 @@ public class EscribirArchivo {
 
     private String nombreFichero;
     private String nombreAlg;
+    private String algoritmoEj;
+    private int tipo;
     private int tam;
     private double rmin;
     private double rmax;
@@ -16,11 +18,10 @@ public class EscribirArchivo {
     private double aux;
     private ArrayList<Double> solActual;
     private int op;
-    private int tTabu = 7;
     private int iteraciones;
 
     public EscribirArchivo(String nombreAlg, int tam, double rmin, double rmax, long semilla,
-            int evaluaciones, int nAlg, int op) throws Exception {
+            int evaluaciones, int nAlg, int op, String algoritmoEj, int tipo) throws Exception {
         this.nombreAlg = nombreAlg;
         this.tam = tam;
         this.rmin = rmin;
@@ -30,15 +31,24 @@ public class EscribirArchivo {
         this.nAlg = nAlg;
         this.aux = 0;
         this.op = op;
+        this.algoritmoEj = algoritmoEj;
+        this.tipo = tipo;
+
         switch (op) {
             case 1:
-                this.nombreFichero = "./Logs/" + nombreAlg + semilla + "BLocal3" + ".log";
+                this.nombreFichero = "./Logs/" + nombreAlg + semilla + "EvM" + ".log";
                 break;
             case 2:
-                this.nombreFichero = "./Logs/" + nombreAlg + semilla + "BLocalK" + ".log";
+                this.nombreFichero = "./Logs/" + nombreAlg + semilla + "EvBLX" + ".log";
                 break;
             case 3:
-                this.nombreFichero = "./Logs/" + nombreAlg + semilla + "BTabu" + ".log";
+                this.nombreFichero = "./Logs/" + nombreAlg + semilla + "EvD" + ".log";
+                break;
+            case 4:
+                this.nombreFichero = "./Logs/" + algoritmoEj + semilla + "MAPE" + ".log";
+                break;
+            case 5:
+                this.nombreFichero = "./Logs/" + algoritmoEj + semilla + "RMSE" + ".log";
                 break;
             default:
                 this.nombreFichero = "./Logs/" + nombreAlg + semilla + ".log";

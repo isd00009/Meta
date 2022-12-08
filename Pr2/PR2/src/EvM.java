@@ -5,7 +5,7 @@ public class EvM {
 
     public static double EvMedia(int tamPoblacion, int tam, int evaluaciones, ArrayList<Double> sol,
             double rmin, double rmax, double probMutacion, double probCruce, int selector,
-            long semilla) {
+            long semilla, ArrayList<ArrayList<Double>> observations, int tipo) {
 
         Random r = new Random(semilla);
 
@@ -35,7 +35,8 @@ public class EvM {
 
         for (int i = 0; i < tamPoblacion; i++) {
             Funciones.cargaAleatoria(cr.get(i).getCromosomas(), tam, rmin, rmax, r);
-            cr.get(i).setCoste(Funciones.CalcularCoste(cr.get(i).getCromosomas(), selector));
+            cr.get(i).setCoste(Funciones.CalcularCoste(cr.get(i).getCromosomas(), selector,
+                    observations, tipo));
 
             if (cr.get(i).getCoste() < mejorCoste) {
                 mejorCoste = cr.get(i).getCoste();
@@ -160,8 +161,8 @@ public class EvM {
 
             for (int i = 0; i < tamPoblacion; i++) {
                 if (marcados.get(i)) {
-                    gen1.get(i).setCoste(
-                            Funciones.CalcularCoste(gen1.get(i).getCromosomas(), selector));
+                    gen1.get(i).setCoste(Funciones.CalcularCoste(gen1.get(i).getCromosomas(),
+                            selector, observations, tipo));
                     cont++;
                 }
 
