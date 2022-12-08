@@ -1,5 +1,5 @@
-Algoritmo(EvM,EvBLX,EvD)=EvD
+Algoritmo(EvM,EvBLX,EvD)=EvM
 Semilla(1-5)=5
 Función de evaluación=Trid
-Evaluacion con fichero de texto(Si/No)=Si
+Evaluacion con fichero de texto(Si/No)=No
 Tipo de error(1-MAPE,2-RMSE)=2

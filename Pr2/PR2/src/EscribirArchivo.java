@@ -1,7 +1,6 @@
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class EscribirArchivo {
 
@@ -18,7 +17,6 @@ public class EscribirArchivo {
     private double aux;
     private ArrayList<Double> solActual;
     private int op;
-    private int iteraciones;
     private double probMutacion = 0.01;
     private double probCruce = 0.7;
     private double alpha = 0.5;

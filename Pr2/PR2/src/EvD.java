@@ -6,6 +6,7 @@ public class EvD {
     public static double evDif(int tamPoblacion, int tam, int evaluaciones, ArrayList<Double> sol,
             double rmin, double rmax, int selector, long semilla,
             ArrayList<ArrayList<Double>> observations, int tipo) {
+
         Random r = new Random(semilla);
         ArrayList<Cromosoma> cr = new ArrayList<Cromosoma>(tamPoblacion);
         for (int i = 0; i < tamPoblacion; i++) {
