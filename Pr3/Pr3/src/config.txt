@@ -1,0 +1,10 @@
+archivo=
+semilla=
+iteraciones=10000
+poblacion=10
+greedy=
+alpha=1
+beta=2
+q0=0.95
+p=0.1
+fi=0.1
