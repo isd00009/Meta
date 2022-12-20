@@ -1,26 +1,55 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Algoritmo {
+public class SCH {
 
     public static void Hormigas(ArrayList<ArrayList<Double>> distancias, int n,
             ArrayList<Integer> sol, int iteraciones, int poblacion, double greedy, int alfa,
             int beta, double q0, double p, double fi, int semilla) {
 
         Random r = new Random(semilla);
-        Hormiga h = new Hormiga(poblacion);
+        Hormiga h = new Hormiga(poblacion, n);
         ArrayList<ArrayList<Double>> feromona;
         ArrayList<ArrayList<Double>> heuristica;
         ArrayList<ArrayList<Boolean>> marcados;
-        ArrayList<Integer> mejorHormigaAct = new ArrayList<Integer>(n);
-        double mejorCosteGlobal = Double.MAX_VALUE, mejorCosteActual = Double.MAX_VALUE;
+        ArrayList<Integer> mejorHormigaAct;
+        double mejorCosteGlobal = Double.MAX_VALUE, mejorCosteActual;
         double fInicial;
         int cont = 0;
         double tiempoTotal = 0;
 
         feromona = new ArrayList<ArrayList<Double>>(n);
         heuristica = new ArrayList<ArrayList<Double>>(n);
-        marcados = new ArrayList<ArrayList<Boolean>>(n);
+        marcados = new ArrayList<ArrayList<Boolean>>(poblacion);
+        mejorHormigaAct = new ArrayList<Integer>(n);
+
+        for (int i = 0; i < n; i++) {
+            ArrayList<Double> aux = new ArrayList<Double>(n);
+            for (int j = 0; j < n; j++) {
+                aux.add(0.0);
+            }
+            feromona.add(aux);
+        }
+        for (int i = 0; i < n; i++) {
+            ArrayList<Double> aux = new ArrayList<Double>(n);
+            for (int j = 0; j < n; j++) {
+                aux.add(0.0);
+            }
+            heuristica.add(aux);
+        }
+        for (int i = 0; i < poblacion; i++) {
+            ArrayList<Boolean> aux = new ArrayList<Boolean>(n);
+            for (int j = 0; j < n; j++) {
+                aux.add(false);
+            }
+            marcados.add(aux);
+        }
+        for (int i = 0; i < n; i++) {
+            mejorHormigaAct.add(0);
+        }
+
 
         fInicial = (double) (1.0 / (poblacion * greedy));
 
@@ -45,28 +74,31 @@ public class Algoritmo {
                 Funciones.carga(h.getHormiga(i), r, n, marcados.get(i));
             }
 
-            char c;
-
             for (int i = 1; i < n; i++) {
                 for (int j = 0; j < poblacion; j++) {
-                    ArrayList<Double> ferxHeu = new ArrayList<Double>(n);
+                    ArrayList<BigDecimal> ferxHeu = new ArrayList<BigDecimal>(n);
+                    for (int k = 0; k < n; k++) {
+                        ferxHeu.add(new BigDecimal(0.0));
+                    }
                     for (int k = 0; k < n; k++) {
                         if (!marcados.get(j).get(k)) {
-                            ferxHeu.add(Math.pow(feromona.get(h.getHormiga(j).get(i - 1)).get(k),
-                                    alfa)
-                                    * Math.pow(heuristica.get(h.getHormiga(j).get(i - 1)).get(k),
-                                            beta));
+                            BigDecimal aux1B = new BigDecimal(Math
+                                    .pow(feromona.get(h.getHormiga(j).get(i - 1)).get(k), alfa));
+                            BigDecimal aux2B = new BigDecimal(Math
+                                    .pow(heuristica.get(h.getHormiga(j).get(i - 1)).get(k), beta));
+                            BigDecimal aux = aux1B.multiply(aux2B);
+                            ferxHeu.set(k, aux);
                         }
                     }
 
-                    double denominador = 0.0;
-                    double argMax = 0.0;
+                    BigDecimal denominador = new BigDecimal(0.0);
+                    BigDecimal argMax = new BigDecimal(0.0);
                     int posArgMax = 0;
 
                     for (int k = 0; k < n; k++) {
                         if (!marcados.get(j).get(k)) {
-                            denominador += ferxHeu.get(k);
-                            if (ferxHeu.get(k) > argMax) {
+                            denominador = denominador.add(ferxHeu.get(k));
+                            if (ferxHeu.get(k).compareTo(argMax) > 0) {
                                 argMax = ferxHeu.get(k);
                                 posArgMax = k;
                             }
@@ -74,7 +106,10 @@ public class Algoritmo {
                     }
 
                     int elegido = 0;
-                    ArrayList<Double> prob = new ArrayList<Double>(n);
+                    ArrayList<BigDecimal> prob = new ArrayList<BigDecimal>(n);
+                    for (int k = 0; k < n; k++) {
+                        prob.add(new BigDecimal(0.0));
+                    }
                     double q = r.nextDouble();
 
                     if (q0 > q) {
@@ -82,16 +117,17 @@ public class Algoritmo {
                     } else {
                         for (int k = 0; k < n; k++) {
                             if (!marcados.get(j).get(k)) {
-                                prob.add(ferxHeu.get(k) / denominador);
+                                prob.add(ferxHeu.get(k).divide(denominador, 10,
+                                        RoundingMode.HALF_UP));
                             }
                         }
 
                         double uniforme = r.nextDouble();
-                        double suma = 0.0;
+                        BigDecimal suma = new BigDecimal(0.0);
                         for (int k = 0; k < n; k++) {
                             if (!marcados.get(j).get(k)) {
-                                suma += prob.get(k);
-                                if (suma >= uniforme) {
+                                suma = suma.add(prob.get(k));
+                                if (suma.compareTo(new BigDecimal(uniforme)) >= 0) {
                                     elegido = k;
                                     break;
                                 }
@@ -111,7 +147,7 @@ public class Algoritmo {
 
                 }
             }
-
+            mejorCosteActual = Double.MAX_VALUE;
             for (int i = 0; i < poblacion; i++) {
                 double coste = Funciones.coste(h.getHormiga(i), distancias, n);
                 if (coste < mejorCosteActual) {
@@ -146,12 +182,20 @@ public class Algoritmo {
             }
             h.getHormigas().clear();
             h.getCostes().clear();
-            h = new Hormiga(poblacion);
+            h = new Hormiga(poblacion, n);
             for (int i = 0; i < poblacion; i++) {
                 marcados.get(i).clear();
             }
             marcados.clear();
+
             marcados = new ArrayList<ArrayList<Boolean>>(poblacion);
+            for (int i = 0; i < poblacion; i++) {
+                ArrayList<Boolean> aux = new ArrayList<Boolean>(n);
+                for (int j = 0; j < n; j++) {
+                    aux.add(false);
+                }
+                marcados.add(aux);
+            }
 
             cont++;
 

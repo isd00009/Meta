@@ -4,12 +4,16 @@ public class Hormiga {
     private ArrayList<ArrayList<Integer>> hormigas;
     private ArrayList<Double> costes;
 
-    public Hormiga(int tam) {
-        hormigas = new ArrayList<ArrayList<Integer>>();
-        costes = new ArrayList<Double>();
+    public Hormiga(int tam, int n) {
+        hormigas = new ArrayList<ArrayList<Integer>>(tam);
+        costes = new ArrayList<Double>(n);
         for (int i = 0; i < tam; i++) {
-            hormigas.add(new ArrayList<Integer>());
-            costes.add(0.0);
+            ArrayList<Integer> aux = new ArrayList<Integer>(n);
+            for (int j = 0; j < n; j++) {
+                aux.add(0);
+                costes.add(0.0);
+            }
+            hormigas.add(aux);
         }
     }
 

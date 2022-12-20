@@ -4,7 +4,7 @@ import java.util.Random;
 public class Funciones {
 
     public static void carga(ArrayList<Integer> s, Random r, int n, ArrayList<Boolean> marcados) {
-        s.add(r.nextInt(n));
+        s.set(0, r.nextInt(n));
         marcados.set(s.get(0), true);
     }
 

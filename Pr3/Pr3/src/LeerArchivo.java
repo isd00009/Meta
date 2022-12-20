@@ -1,87 +1,69 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 public class LeerArchivo {
 
-    private String nombreAlg;
-    private int semillas[];
-    private int semilla;
-    private int tam;
-    private int evaluaciones;
-    private double rmin, rmax;
-    private int nAlg;
-    private int tipo;
-    private String algoritmoEjecucion;
-    private boolean ficheroTexto;
+    int semilla, iteraciones, poblacion;
+    double greedy;
+    int alfa, beta;
+    double q0, p, fi;
+    String ficheroALeer;
+    ArrayList<ArrayList<Double>> dist;
+    int n;
 
-    public LeerArchivo() {
-        nombreAlg = "";
-        semillas = new int[5];
-        tam = 0;
-        evaluaciones = 0;
-        rmin = 0;
-        rmax = 0;
-        nAlg = 0;
-        tipo = 0;
-        ficheroTexto = false;
-    }
+    public LeerArchivo() {}
 
-    private void leerFuncEv(String nombreFichero) {
-        semillas = new int[5];
-
+    public void leerFich(String nombreFichero) {
+        ArrayList<ArrayList<Double>> coordenadas = new ArrayList<ArrayList<Double>>();
+        int x;
+        // Read a file but ignore the first 3 lines
         try {
             FileReader fr = new FileReader(nombreFichero);
             BufferedReader br = new BufferedReader(fr);
             String linea;
+            int i = 0;
             while ((linea = br.readLine()) != null) {
-                String[] campos = linea.split("=");
-                switch (campos[0]) {
-                    case "function":
-                        String[] v = campos[1].split(" ");
-                        nombreAlg = v[0];
-                        rmin = Double.parseDouble(v[1]);
-                        rmax = Double.parseDouble(v[2]);
-                        break;
-                    case "dni":
-                        String[] v2 = campos[1].split(" ");
-                        for (int i = 0; i < v2.length; i++) {
-                            semillas[i] = Integer.parseInt(v2[i]);
-                        }
-                        switch (semilla) {
-                            case 1:
-                                semilla = semillas[0];
-                                break;
-                            case 2:
-                                semilla = semillas[1];
-                                break;
-                            case 3:
-                                semilla = semillas[2];
-                                break;
-                            case 4:
-                                semilla = semillas[3];
-                                break;
-                            case 5:
-                                semilla = semillas[4];
-                                break;
-                            default:
-                                System.out.println("Semilla no válida");
-                                break;
-                        }
-                        break;
-                    case "evaluaciones":
-                        evaluaciones = Integer.parseInt(campos[1]);
-                        break;
-                    case "d":
-                        tam = Integer.parseInt(campos[1]);
-                        break;
-                    case "n":
-                        nAlg = Integer.parseInt(campos[1]);
-                        break;
+                if (i == 3) {
+                    String[] campos = linea.split(":");
+                    // read the numer after the colon
+                    String[] campos2 = campos[1].split(" ");
+                    // read the number after the space
+                    n = Integer.parseInt(campos2[1]);
+                } else if (i > 5 && i < n + 6) {
+                    // store the first number in x and the rest in the coordinates matrix
+                    String[] campos = linea.split(" ");
+                    x = Integer.parseInt(campos[0]);
+                    ArrayList<Double> aux = new ArrayList<Double>();
+                    for (int j = 1; j < campos.length; j++) {
+                        aux.add(Double.parseDouble(campos[j]));
+                    }
+                    coordenadas.add(aux);
                 }
+                i++;
             }
             br.close();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
+        }
+
+        dist = new ArrayList<ArrayList<Double>>(n);
+        for (int i = 0; i < n; i++) {
+            ArrayList<Double> aux = new ArrayList<Double>(n);
+            for (int j = 0; j < n; j++) {
+                aux.add(0.0);
+            }
+            dist.add(aux);
+        }
+
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                double distancia = Math.sqrt(
+                        Math.pow(coordenadas.get(i).get(0) - coordenadas.get(j).get(0), 2) + Math
+                                .pow(coordenadas.get(i).get(1) - coordenadas.get(j).get(1), 2));
+                dist.get(i).set(j, distancia);
+                dist.get(j).set(i, distancia);
+            }
         }
     }
 
@@ -93,29 +75,35 @@ public class LeerArchivo {
             while ((linea = br.readLine()) != null) {
                 String[] campos = linea.split("=");
                 switch (campos[0]) {
-                    case "Algoritmo(EvM,EvBLX,EvD)":
-                        algoritmoEjecucion = campos[1];
+                    case "archivo":
+                        ficheroALeer = campos[1];
                         break;
-                    case "Semilla(1-5)":
+                    case "semilla":
                         semilla = Integer.parseInt(campos[1]);
                         break;
-                    case "Función de evaluación":
-                        leerFuncEv(campos[1] + ".txt");
+                    case "iteraciones":
+                        iteraciones = Integer.parseInt(campos[1]);
                         break;
-                    case "Evaluacion con fichero de texto(Si/No)":
-                        if (campos[1].equals("Si")) {
-                            nAlg = 11;
-                            rmin = -1;
-                            rmax = 1;
-                            ficheroTexto = true;
-                        }
+                    case "poblacion":
+                        poblacion = Integer.parseInt(campos[1]);
                         break;
-                    case "Tipo de error(1-MAPE,2-RMSE)":
-                        if (campos[1].equals("1")) {
-                            tipo = 1;
-                        } else if (campos[1].equals("2")) {
-                            tipo = 2;
-                        }
+                    case "greedy":
+                        greedy = Double.parseDouble(campos[1]);
+                        break;
+                    case "alpha":
+                        alfa = Integer.parseInt(campos[1]);
+                        break;
+                    case "beta":
+                        beta = Integer.parseInt(campos[1]);
+                        break;
+                    case "q0":
+                        q0 = Double.parseDouble(campos[1]);
+                        break;
+                    case "p":
+                        p = Double.parseDouble(campos[1]);
+                        break;
+                    case "fi":
+                        fi = Double.parseDouble(campos[1]);
                         break;
                 }
             }
@@ -125,47 +113,51 @@ public class LeerArchivo {
         }
     }
 
-
-
-    // Getters
-
-    public String getAlgoritmoEjecucion() {
-        return algoritmoEjecucion;
-    }
-
-    public String getNombreAlg() {
-        return nombreAlg;
-    }
-
     public int getSemilla() {
         return semilla;
     }
 
-    public int getTam() {
-        return tam;
+    public int getIteraciones() {
+        return iteraciones;
     }
 
-    public int getEvaluaciones() {
-        return evaluaciones;
+    public int getPoblacion() {
+        return poblacion;
     }
 
-    public double getRmin() {
-        return rmin;
+    public double getGreedy() {
+        return greedy;
     }
 
-    public double getRmax() {
-        return rmax;
+    public int getAlfa() {
+        return alfa;
     }
 
-    public int getnAlg() {
-        return nAlg;
+    public int getBeta() {
+        return beta;
     }
 
-    public int getTipo() {
-        return tipo;
+    public double getQ0() {
+        return q0;
     }
 
-    public boolean isFicheroTexto() {
-        return ficheroTexto;
+    public double getP() {
+        return p;
+    }
+
+    public double getFi() {
+        return fi;
+    }
+
+    public String getFicheroALeer() {
+        return ficheroALeer;
+    }
+
+    public ArrayList<ArrayList<Double>> getDist() {
+        return dist;
+    }
+
+    public int getN() {
+        return n;
     }
 }
